@@ -1,0 +1,30 @@
+{
+  "name": "clase24",
+  "version": "1.0.0",
+  "description": "Clase 24 del curso de Global Learning. Probando NodeJS",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "dev": "node --watch index.js",
+    "exercise-solution": "node --watch ejercicio24.js",
+    "challenge": "node desafio-clase-24.js"
+
+  },
+  "keywords": [
+    "clase24"
+  ],
+  "author": "Axel Roitstein",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "eslint": "^8.44.0",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-n": "^16.0.1",
+    "eslint-plugin-promise": "^6.1.1"
+  }
+}
