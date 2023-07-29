@@ -5,7 +5,7 @@ import { bookRoutes } from './routes/bookRouter.js'
 import errorHandler from './middlewares/errorHandler.js'
 import httpStatus from './helpers/httpStatus.js'
 import fs from 'node:fs'
-
+import { hrtime } from 'node:process'
 
 dotenv.config()
 
@@ -21,10 +21,11 @@ app.use('/api', bookRoutes(BOOKS_FROM))
 
 app.use((req, res, next) => {
       console.log(`${req.method} ${req.originalUrl} [STARTED]`)
-      const start = process.hrtime()
-
+      const start = hrtime.bigint()
+      
     res.on('finish', () => {
-        console.log(` The process from ${req.method} ${req.originalUrl} took ${(start[0] + start[1]) / Math.pow(10,9)} seconds `)
+      const end = hrtime.bigint()  
+        console.log(` The process from ${req.method} ${req.originalUrl} took ${(end - start) / BigInt(1_000_000) } miliseconds `)
     })
 
     res.on('close',() => {
@@ -40,15 +41,20 @@ app.use((req, res, next) => {
   res.on ('finish', () => {
     const date = new Date() 
     const logFilePath = (process.cwd(), 'request.txt')
-    const responseHTTPCode = httpStatus.NOT_FOUND
-    fs.appendFileSync(logFilePath, `${date.getDate()}/${date.getMonth()}/${date.getFullYear()} - ${req.method} - ${responseHTTPCode}\r\n`)
-    
+    const {responseHTTPCode,axel} = res.locals
+    fs.appendFileSync(logFilePath, `${date.getDate()}/${date.getMonth()}/${date.getFullYear()} - ${req.method} - ${responseHTTPCode} - ${axel}\r\n`)
+    console.log(req)
   })
-  res.status(responseHTTPCode)
   next()
 })
-  
-app.use(errorHandler)
+
+  app.get('*',  (_,res) => {
+    res.locals.responseHTTPCode = httpStatus.OK
+    res.locals.axel = "hola, amiguis de iutub"
+    return res.status(httpStatus.OK).send('hola mundo') 
+  })
+
+  app.use(errorHandler)
 
 app.listen(PORT, () => {
   console.log(`Exercises one & two listening on port ${PORT}!`)
