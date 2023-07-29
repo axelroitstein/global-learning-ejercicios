@@ -1,6 +1,7 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,64 +11,64 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Books {
-  id        Int       @id @default(autoincrement())
-  author    String
-  title     String
-  stock     Int
-  loans     Loans[]
-  createdAt DateTime  @updatedAt @map("created_at")
-  updatedAt DateTime  @updatedAt @map("updated_at")
-  deletedAt DateTime? @map("deleted_at")
+// model Books {
+//   id        Int       @id @default(autoincrement())
+//   author    String
+//   title     String
+//   stock     Int
+//   loans     Loans[]
+//   createdAt DateTime  @updatedAt @map("created_at")
+//   updatedAt DateTime  @updatedAt @map("updated_at")
+//   deletedAt DateTime? @map("deleted_at")
 
-  @@map("books")
-}
+//   @@map("books")
+// }
 
-model Users {
-  id        Int       @id @default(autoincrement())
-  firstName String    @map("first_name")
-  lastName  String    @map("last_name")
-  email     String    @unique
-  address   String
-  password  String
-  loans     Loans[]
-  birthday  DateTime
-  createdAt DateTime  @updatedAt @map("created_at")
-  updatedAt DateTime  @updatedAt @map("updated_at")
-  deletedAt DateTime? @map("deleted_at")
+// model Users {
+//   id        Int       @id @default(autoincrement())
+//   firstName String    @map("first_name")
+//   lastName  String    @map("last_name")
+//   email     String    @unique
+//   address   String
+//   password  String
+//   loans     Loans[]
+//   birthday  DateTime
+//   createdAt DateTime  @updatedAt @map("created_at")
+//   updatedAt DateTime  @updatedAt @map("updated_at")
+//   deletedAt DateTime? @map("deleted_at")
 
-  @@map("users")
-}
+//   @@map("users")
+// }
 
-model Responsibles {
-  id        Int       @id @default(autoincrement())
-  firstName String    @map("first_name")
-  lastName  String    @map("last_name")
-  laborID   Int       @unique @map("labor_id")
-  loans     Loans[]
-  createdAt DateTime  @updatedAt @map("created_at")
-  updatedAt DateTime  @updatedAt @map("updated_at")
-  deletedAt DateTime? @map("deleted_at")
+// model Responsibles {
+//   id        Int       @id @default(autoincrement())
+//   firstName String    @map("first_name")
+//   lastName  String    @map("last_name")
+//   laborID   Int       @unique @map("labor_id")
+//   loans     Loans[]
+//   createdAt DateTime  @updatedAt @map("created_at")
+//   updatedAt DateTime  @updatedAt @map("updated_at")
+//   deletedAt DateTime? @map("deleted_at")
 
-  @@map("responsibles")
-}
+//   @@map("responsibles")
+// }
 
-model Loans {
-  id           Int           @id @default(autoincrement())
-  bookID       Int           @map("book_id")
-  book         Books?        @relation(fields: [bookID], references: [id])
-  userID       Int           @map("user_id")
-  user         Users?        @relation(fields: [userID], references: [id])
-  reponsibleID Int           @map("responsible_id")
-  responsible  Responsibles? @relation(fields: [reponsibleID], references: [id])
-  loanDate     DateTime      @map("loan_date")
-  returnDate   DateTime      @map("return_date")
-  createdAt    DateTime      @updatedAt @map("created_at")
-  updatedAt    DateTime      @updatedAt @map("updated_at")
-  deletedAt    DateTime?     @map("deleted_at")
+// model Loans {
+//   id           Int           @id @default(autoincrement())
+//   bookID       Int           @map("book_id")
+//   book         Books?        @relation(fields: [bookID], references: [id])
+//   userID       Int           @map("user_id")
+//   user         Users?        @relation(fields: [userID], references: [id])
+//   reponsibleID Int           @map("responsible_id")
+//   responsible  Responsibles? @relation(fields: [reponsibleID], references: [id])
+//   loanDate     DateTime      @map("loan_date")
+//   returnDate   DateTime      @map("return_date")
+//   createdAt    DateTime      @updatedAt @map("created_at")
+//   updatedAt    DateTime      @updatedAt @map("updated_at")
+//   deletedAt    DateTime?     @map("deleted_at")
 
-  @@map("loans")
-}
+//   @@map("loans")
+// }
 
 // MI ESQUEMA DE PRISMA :)
 
@@ -78,13 +79,11 @@ model Songs {
   album       Albums[]
   name        String
   genre       String
-  duration    Float
-  createdAt   DateTime @updatedAt @map("created_at")
+  duration    Int
+  createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
-  deletedAt   DateTime @map("deleted_at")
-  userFav     Userss?  @relation(fields: [userId], references: [id])
-  userId      Int
-  FavoriteSongs FavoriteSongs[]
+  deletedAt   DateTime? @map("deleted_at")
+  userFav     Users[] 
 
   @@map("songs")
 }
@@ -93,10 +92,11 @@ model Artists {
   id          Int      @id @default(autoincrement())
   name        String
   song        Songs[]
+  album       Albums[]
   nationality String
-  createdAt   DateTime @updatedAt @map("created_at")
+  createdAt   DateTime @default(now())  @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
-  deletedAt   DateTime @map("deleted_at")
+  deletedAt   DateTime? @map("deleted_at")
 
   @@map("artists")
 }
@@ -104,17 +104,18 @@ model Artists {
 model Albums {
   id          Int      @id @default(autoincrement())
   name        String
-  artist      String
+  artistId    Int @map("artist_id") 
+  artist      Artists  @relation(fields: [artistId], references: [id])
   song        Songs[]
   releaseDate DateTime @map("release_date")
-  createdAt   DateTime @updatedAt @map("created_at")
+  createdAt   DateTime @default(now())  @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
-  deletedAt   DateTime @map("deleted_at")
+  deletedAt   DateTime? @map("deleted_at")
 
   @@map("albums")
 }
 
-model Userss {
+model Users {
   id        Int        @id @default(autoincrement())
   firstName String     @map("first_name")
   lastName  String     @map("last_name")
@@ -122,22 +123,10 @@ model Userss {
   password  String
   birthday  String
   song      Songs[]
-  favSongs  FavoriteSongs[]
-  createdAt DateTime   @updatedAt @map("created_at")
+  createdAt DateTime   @default(now())  @map("created_at")
   updatedAt DateTime   @updatedAt @map("updated_at")
-  deletedAt DateTime   @map("deleted_at")
+  deletedAt DateTime?   @map("deleted_at")
 
-  @@map("userss")
+  @@map("users")
 }
 
-model FavoriteSongs {
-  id         Int      @id @default(autoincrement())
-  songId     Int      @map("song_id")
-  song       Songs?   @relation(fields: [songId], references: [id])
-  userId     Int      @map("user_id")
-  user       Userss?  @relation(fields: [userId], references: [id])
-  favAt      DateTime @map("fav_at")
-  removedFav Boolean? @map("removed_fav")
-
-  @@map("favorite_songs")
-}
