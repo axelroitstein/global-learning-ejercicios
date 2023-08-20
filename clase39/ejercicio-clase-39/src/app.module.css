@@ -1,0 +1,30 @@
+.button{
+    background-color: rgb(173, 139, 139);
+    text-transform: uppercase;
+    color:rgb(135, 243, 243);
+    border: 5px solid blueviolet;
+}
+
+.addButton{
+    background-color: #181818;
+    color: #fafafa;
+}
+
+.substractButton{
+    background-color: darkmagenta;
+    color:goldenrod;
+    font-weight: bold;
+}
+
+.result{
+    color: red;
+    background-color:black;
+    border: 10px solid red;
+}
+
+.resultNumber{
+    background-color: black;
+    color:#fafafa;
+    font-size: 2em;
+}
+
